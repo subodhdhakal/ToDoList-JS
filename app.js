@@ -3,39 +3,36 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
+let items = ["Buy Food", "Cook Food", "EAT FOOD O_O YUM YUM"];  //Global variable
+
 app.set("view engine", "ejs");
 
+app.use(bodyParser.urlencoded({extended: true}));
+
 app.get("/", function(req, res) {   //When user tries to access the home route, res.send("Hello")
-    var today = new Date();
-    var currentDay = today.getDay();
-    var day = "";
-    
-    switch(currentDay) {
-        case 0:
-            day = "Sunday";
-            break;
-        case 1:
-            day = "Monday";
-            break;
-        case 2:
-            day = "Tuesday";
-            break;
-        case 3:
-            day = "Wednesday";
-            break;
-        case 4:
-            day = "Thursday";
-            break;
-        case 5:
-            day = "Friday";
-            break;
-        case 6:
-            day = "Saturday";
-            break;
-        default:
-            console.log("Error Occured. Current Day unavailable.");
-    }
-    res.render("list", {kindOfday: day});
+    let today = new Date();
+
+    let currentDay = today.getDay();
+
+    let options = {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+    };
+
+    let day = today.toLocaleDateString("en-US", options);   //can be used to render date in japanese, chinese,...etc
+
+
+    res.render("list", {kindOfday: day, newListItems: items});  //ejs list.html- passing JS objects
+});
+
+app.post("/", function(req, res) {
+
+    item = req.body.newItem;
+
+    items.push(item);
+
+    res.redirect("/");   //Redirects to home route and then goes back to the app.get("/") and runs that code.
 });
 
 app.listen(3000, function() {

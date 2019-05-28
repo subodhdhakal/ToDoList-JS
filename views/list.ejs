@@ -5,6 +5,23 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>It's a <%= kindOfday %> </h1>
+<!--
+    <% if(kindOfday === "Saturday" || kindOfday === "Sunday"){ %>
+    <h1 style="color: purple">It's a <%= kindOfday %> List</h1>
+    <% } else { %>
+        <h1 style="color: blue"><%= kindOfday %> ToDo List</h1>
+    <% } %>
+-->
+<h1><%= kindOfday %></h1>
+<ul>
+      <%  for(let i = 0; i < newListItems.length; i++) { %>
+        <li><%= newListItems[i] %></li>
+       <% } %>
+</ul>
+<form class="" action="/" method="POST">
+<input type="text" name="newItem" placeholder="Enter next Todolist">
+<button type="submit" name="button">Add</button>
+</form>
+
 </body>
 </html>
