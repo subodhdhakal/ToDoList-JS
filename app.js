@@ -1,10 +1,9 @@
-const express = r
-equire("express");
+const express = require("express");
 const bodyParser = require("body-parser");
 
 const app = express();
 
-app.use("view engine", "ejs");
+app.set("view engine", "ejs");
 
 app.get("/", function(req, res) {   //When user tries to access the home route, res.send("Hello")
     var today = new Date();
