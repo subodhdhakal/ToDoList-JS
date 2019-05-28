@@ -8,6 +8,7 @@ let items = ["Buy Food", "Cook Food", "EAT FOOD O_O YUM YUM"];  //Global variabl
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static("public"));
 
 app.get("/", function(req, res) {   //When user tries to access the home route, res.send("Hello")
     let today = new Date();
