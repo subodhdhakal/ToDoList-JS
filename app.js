@@ -2,8 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const app = express();
-
+//const date = require(__dirname + "/filename.js"); //Basically used To add/import/export node modules a file JS
 let items = ["Buy Food", "Cook Food", "EAT FOOD O_O YUM YUM"];  //Global variable
+let workItems = [];
 
 app.set("view engine", "ejs");
 
@@ -24,16 +25,30 @@ app.get("/", function(req, res) {   //When user tries to access the home route, 
     let day = today.toLocaleDateString("en-US", options);   //can be used to render date in japanese, chinese,...etc
 
 
-    res.render("list", {kindOfday: day, newListItems: items});  //ejs list.html- passing JS objects
+    res.render("list", {listTitle: day, newListItems: items});  //ejs list.html- passing JS objects
 });
 
 app.post("/", function(req, res) {
 
-    item = req.body.newItem;
+    let item = req.body.newItem;
 
-    items.push(item);
+    //res.redirect("/");   //Redirects to home route and then goes back to the app.get("/") and runs that code.
 
-    res.redirect("/");   //Redirects to home route and then goes back to the app.get("/") and runs that code.
+    if(req.body.list === "Work"){
+        workItems.push(item);
+        res.redirect("/work");
+    } else{
+        items.push(item);
+        res.redirect("/");
+    }
+});
+
+app.get("/work", function(req,res) {
+    res.render("list", {listTitle: "Work List", newListItems: workItems});
+});
+
+app.get("/about", function(req, res) {
+    res.render("about");
 });
 
 app.listen(3000, function() {

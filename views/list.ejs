@@ -1,20 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Document</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-<!--
-    <% if(kindOfday === "Saturday" || kindOfday === "Sunday"){ %>
-    <h1 style="color: purple">It's a <%= kindOfday %> List</h1>
-    <% } else { %>
-        <h1 style="color: blue"><%= kindOfday %> ToDo List</h1>
-    <% } %>
--->
+<%- include("header"); -%>
+
 <div class="box" id="heading">
-    <h1><%= kindOfday %></h1>
+    <h1><%= listTitle %></h1>
 </div>
 
 <div class="box">
@@ -27,12 +14,9 @@
 
     <form class="item" action="/" method="POST">
         <input type="text" name="newItem" placeholder="Enter next Todolist" autocomplete="off">
-        <button type="submit" name="button">+</button>
+        <button type="submit" name="list" value=<%= listTitle %></button>+</button>
     </form>
 
 </div>
 
-
-
-</body>
-</html>
+<%- include("footer"); -%>
