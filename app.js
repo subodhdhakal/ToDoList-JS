@@ -1,15 +1,15 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
+const mongoose = require("mongoose");
 const app = express();
 //const date = require(__dirname + "/filename.js"); //Basically used To add/import/export node modules a file JS
-let items = ["Buy Food", "Cook Food", "EAT FOOD O_O YUM YUM"];  //Global variable
-let workItems = [];
 
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+
+mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true});
 
 app.get("/", function(req, res) {   //When user tries to access the home route, res.send("Hello")
     let today = new Date();
