@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = express();
+const _ = require("lodash");
 //const date = require(__dirname + "/filename.js"); //Basically used To add/import/export node modules a file JS
 
 app.set("view engine", "ejs");
@@ -81,16 +82,28 @@ if(listName === "Today"){
 
 app.post("/delete", function(req,res){
     const checkedItemId = req.body.checkbox;
-    Item.findByIdAndRemove(checkedItemId, function(err){
-        if(!err){
-            console.log("Sucessfully Removed the item");
-            res.redirect("/");
-        }
-    });
+    const listName = req.body.listName;
+
+    if(listName === "Today"){
+        Item.findByIdAndRemove(checkedItemId, function(err){
+            if(!err){
+                console.log("Sucessfully Removed the item");
+                res.redirect("/");
+            }
+        });
+    } else {
+        List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: checkedItemId}}}, function(err, foundList){
+            if(!err){
+                res.redirect("/" + listName);
+            }
+        });
+    }
+
+   
 });
 
 app.get("/:customName", function(req,res) {
-    const customName = req.params.customName;
+    const customName = _.capitalize(req.params.customName);
 
 List.findOne({name: customName}, function(err, foundList){
     if(!err){
