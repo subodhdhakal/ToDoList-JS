@@ -11,36 +11,65 @@ app.use(express.static("public"));
 
 mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true});
 
+const itemsSchema = {
+    name: String
+};
+
+const Item = mongoose.model("Item", itemsSchema);
+
+const item1 = new Item({
+    name: "Welcome to your todolist"
+});
+
+const item2 = new Item({
+    name: "Hit the + button to add todolist"
+});
+
+const item3 = new Item({
+    name: "<--- Hit this to delete an item"
+});
+
+const defaultItems = [item1, item2, item3];
+
 app.get("/", function(req, res) {   //When user tries to access the home route, res.send("Hello")
-    let today = new Date();
 
-    let currentDay = today.getDay();
+    Item.find({}, function(err, foundItems){
+        if(foundItems.length === 0){
+            Item.insertMany(defaultItems, function(err){
+                if(err){
+                    console.log(err);
+                }
+                else {
+                    console.log("Sucessfully Saved Default Items to Database");
+                }
+            });
+            res.redirect("/");
+        } else {
+             res.render("list", {listTitle: "Today", newListItems: foundItems});  //ejs list.html- passing JS objects
+        }
+    });
 
-    let options = {
-        weekday: "long",
-        day: "numeric",
-        month: "long"
-    };
-
-    let day = today.toLocaleDateString("en-US", options);   //can be used to render date in japanese, chinese,...etc
-
-
-    res.render("list", {listTitle: day, newListItems: items});  //ejs list.html- passing JS objects
 });
 
 app.post("/", function(req, res) {
 
-    let item = req.body.newItem;
+    const itemName = req.body.newItem;
 
-    //res.redirect("/");   //Redirects to home route and then goes back to the app.get("/") and runs that code.
+    const item = new Item({
+    name: itemName
+});
+    item.save();
+    res.redirect("/");   //Redirects to home route and then goes back to the app.get("/") and runs that code.
+});
 
-    if(req.body.list === "Work"){
-        workItems.push(item);
-        res.redirect("/work");
-    } else{
-        items.push(item);
-        res.redirect("/");
-    }
+app.post("/delete", function(req,res){
+    const checkedItemId = req.body.checkbox;
+    Item.findByIdAndRemove(checkedItemId, function(err){
+        if(!err){
+            console.log("Sucessfully Removed the item");
+            res.redirect("/");
+        }
+    });
 });
 
 app.get("/work", function(req,res) {
